@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<h2 class="center-align">Login</h2>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <ul class="collection">
+    {% for message in messages %}
+        <li class="collection-item red-text">{{ message }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endwith %}
+<form method="post" action="{{ url_for('auth.login') }}" class="col s12">
+<div class="row">
+    <div class="input-field col s12">
+    <input type="text" name="username" id="username" required>
+    <label for="username">Username</label>
+    </div>
+    <div class="input-field col s12">
+    <input type="password" name="password" id="password" required>
+    <label for="password">Password</label>
+    </div>
+</div>
+<div class="row center-align">
+    <button type="submit" class="btn waves-effect waves-light">Login</button>
+</div>
+</form>
+{% endblock %}
