@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 from dotenv import dotenv_values
 
 config = dotenv_values(".env")
@@ -13,5 +13,15 @@ def create_app():
     from . import auth
     app.register_blueprint(auth.bp)
     
+    
+    from . import home
+    app.register_blueprint(home.bp)
+    
+    from . import client
+    app.register_blueprint(client.bp)
+    
+    
+    @app.route("/")
+    def index(): return redirect(url_for("home.index"))
     
     return app
