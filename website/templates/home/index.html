@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+{% for category in categorys %}
+    <h3>{{ category }}</h3>
+    <div class="row">
+    {% for feature in features if feature.min_perm_level <= g.user.permission_level and feature.category == category %}
+        <div class="col s12 m6">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">{{ feature.name }}</span>
+                    <p>{{ feature.description }}</p>
+                </div>
+                <div class="card-action">
+                    <a href="{{ url_for(feature.import_url) }}">Ir para {{ feature.name }}</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endfor %}
+{% endblock %}

@@ -3,7 +3,7 @@ from werkzeug.security import check_password_hash
 from .db import get_db
 import functools
 
-bp = Blueprint("auth", __name__, url_prefix="/auth")
+bp = Blueprint("auth", __name__) # este blueprint tem que apontar para index
 
 @bp.route("/login", methods=("POST", "GET"))
 def login():
@@ -26,7 +26,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('auth.login')) # TODO> redirecionar para a home
+            return redirect(url_for('home.index'))
         
         flash(error)
     return render_template('auth/login.html')

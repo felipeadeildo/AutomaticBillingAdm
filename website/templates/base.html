@@ -6,17 +6,18 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css')}}">
 </head>
 <body>
-    <nav class="nav-wrapper">
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#sobre">Sobre</a></li>
-          <li><a href="#servicos">Serviços</a></li>
-          <li><a href="#contato">Contato</a></li>
-        </ul>
-      </nav>
-      <div class="container">
-        {% block content %}{% endblock %}
-      </div>
-      <script src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+  <nav class="nav-wrapper">
+    <div class="container">
+      <span class="brand-logo">{% if g.user %}Olá, {{ g.user.name }}{% endif %}</span>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="{{ url_for('home.index') }}"></a></li>
+        <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+  <script src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
 </body>
 </html>
