@@ -66,6 +66,34 @@ def init_db():
     cursor = db.cursor()
     with open("schema.sql", "r", encoding="utf-8") as f:
         cursor.execute(f.read().replace('__DBNAME__', config['DB_NAME']))
+    
+    # Adicionando algumas features no db
+    cursor.execute(
+        "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)", 
+        ('Adicionar Cliente', 'Adicionar um novo cliente', 'Empresa', 80, 'home.addclient')
+    )
+    
+    cursor.execute(
+        "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Editar Cliente', 'Editar um cliente existente', 'Empresa', 80, 'home.editclient')
+    )
+    
+    cursor.execute(
+        "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Relatórios', 'Mostra informações de relatórios, estatísticas gerais', 'Empresa', 80, 'home.reports')
+    )
+    
+    cursor.execute(
+        "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Configurações', "Configurações do sistema; Configurações referentes à frequência de cobranças, taxa padrão de juros, etc.", 'Empresa', 80, "home.settings")
+    )
+    
+    cursor.execute(
+        "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Configurações', "Configuraçães do sistema; Configurações referentes à taxa padrão de juros, etc.", 'Cliente', 50, "client.settings")
+    )
+    db.commit()
+    
 
 
 @click.command("init-db")
