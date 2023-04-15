@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastro de Cliente{% endblock %}
+
+{% block content %}
+<div class="row">
+  <a href="{{ url_for(previous_page) }}" class="btn waves-effect waves-light"><i class="material-icons left">arrow_back</i>Voltar</a>
+  {% with messages = get_flashed_messages(category_filter=["danger"]) %}
+  {% if messages %}
+    <ul class="collection">
+    {% for message in messages %}
+        <li class="collection-item red-text">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  {% endwith %}
+
+  {% with messages = get_flashed_messages(category_filter=["success"]) %}
+  {% if messages %}
+    <ul class="collection">
+    {% for message in messages %}
+        <li class="collection-item green-text">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  {% endwith %}
+  
+  <h2>Cadastro de Cliente</h2>
+  <form class="col s12" method="post">
+    <div class="row">
+      <div class="input-field col s6">
+        <input id="name" type="text" class="validate" name="name">
+        <label for="name">Nome</label>
+      </div>
+      <div class="input-field col s6">
+        <input id="username" type="text" class="validate" name="username">
+        <label for="username">Nome de usuário</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input id="email" type="email" class="validate" name="email">
+        <label for="email">Email</label>
+      </div>
+      <div class="input-field col s6">
+        <input id="password" type="password" class="validate" name="password">
+        <label for="password">Senha</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input id="role" type="text" class="validate" value="Cliente" name="role">
+        <label for="role">Função</label>
+      </div>
+    </div>
+    <button class="btn waves-effect waves-light" type="submit" name="action">Cadastrar
+      <i class="material-icons right">send</i>
+    </button>
+  </form>
+</div>
+{% endblock %}
