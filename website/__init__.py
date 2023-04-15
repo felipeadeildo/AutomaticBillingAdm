@@ -24,4 +24,7 @@ def create_app():
     @app.route("/")
     def index(): return redirect(url_for("home.index"))
     
+    @app.errorhandler(403)
+    def forbbiden(e): return "403 Forbbiden (Você não tem permissaõ de acessar essa página :D)"
+    
     return app
