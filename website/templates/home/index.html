@@ -3,7 +3,7 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-{% for category in categorys %}
+{% for category, min_perm_level in categorys if min_perm_level <= g.user.permission_level %}
     <h3>{{ category }}</h3>
     <div class="row">
     {% for feature in features if feature.min_perm_level <= g.user.permission_level and feature.category == category %}

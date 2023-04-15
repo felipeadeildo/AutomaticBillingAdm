@@ -4,14 +4,24 @@
 
 {% block content %}
 <h2 class="center-align">Login</h2>
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-    <ul class="collection">
-    {% for message in messages %}
-        <li class="collection-item red-text">{{ message }}</li>
-    {% endfor %}
-    </ul>
-{% endif %}
+{% with messages = get_flashed_messages(category_filter=["danger"]) %}
+    {% if messages %}
+        <ul class="collection">
+            {% for message in messages %}
+                <li class="collection-item red-text">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+{% with messages = get_flashed_messages(category_filter=["success"]) %}
+    {% if messages %}
+        <ul class="collection">
+            {% for message in messages %}
+                <li class="collection-item green-text">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endwith %}
 <div class="row">
     <form method="post" action="{{ url_for('auth.login') }}" class="col s12 m6 offset-m3"> <!-- adicionado classe "m6" para definir a largura, e "offset-m3" para centralizar na tela -->

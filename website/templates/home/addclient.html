@@ -4,7 +4,6 @@
 
 {% block content %}
 <div class="row">
-  <a href="{{ url_for(previous_page) }}" class="btn waves-effect waves-light"><i class="material-icons left">arrow_back</i>Voltar</a>
   {% with messages = get_flashed_messages(category_filter=["danger"]) %}
   {% if messages %}
     <ul class="collection">
@@ -47,15 +46,12 @@
         <label for="password">Senha</label>
       </div>
     </div>
-    <div class="row">
-      <div class="input-field col s6">
-        <input id="role" type="text" class="validate" value="Cliente" name="role">
-        <label for="role">Função</label>
-      </div>
+    <div class="btn-fixed-action">
+      <a href="{{ url_for(previous_page) }}" class="btn waves-effect waves-light right"><i class="material-icons left">arrow_back</i>Voltar para a Home</a>
+      <button class="btn btn-block waves-effect waves-light left" type="submit" name="action">Cadastrar
+        <i class="material-icons right">send</i>
+      </button>
     </div>
-    <button class="btn waves-effect waves-light" type="submit" name="action">Cadastrar
-      <i class="material-icons right">send</i>
-    </button>
   </form>
 </div>
 {% endblock %}
