@@ -2,6 +2,7 @@ from flask import Blueprint, g, request, render_template, url_for, redirect, fla
 from werkzeug.security import check_password_hash
 from .db import get_db
 import functools
+from .settings import EMPRESA_MIN_PERM_LEVEL, CLIENTE_PERM_LEVEL
 
 bp = Blueprint("auth", __name__) # este blueprint tem que apontar para index
 
@@ -65,3 +66,19 @@ def logout():
     session.clear()
     flash("Você foi deslogado com sucesso!")
     return redirect(url_for('auth.login'))
+
+def can_access(access_type:str='empresa') -> bool:
+    """Define se o usuário atual tem permissão a um certo tipo de acesso
+
+    Args:
+        access_type (str, optional): Tipo de acesso, pode ser 'empresa' ou 'cliente'. Defaults to 'empresa'.
+
+    Returns:
+        bool: Confirmação
+    """
+    if access_type == 'empresa':
+        return g.user["permission_level"] >= EMPRESA_MIN_PERM_LEVEL
+    elif access_type == 'cliente':
+        return g.user['permissio_level'] >= CLIENTE_PERM_LEVEL
+    else:
+        raise "Tipo de acesso não suportado, tem certeza que digitou corretamente?"
