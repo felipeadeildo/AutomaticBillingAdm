@@ -1,4 +1,4 @@
-from flask import Blueprint, g, request, render_template, url_for, redirect, flash, session
+from flask import Blueprint, g, request, render_template, url_for, redirect, flash, session, abort
 from werkzeug.security import check_password_hash
 from .db import get_db
 import functools
@@ -9,7 +9,7 @@ bp = Blueprint("auth", __name__) # este blueprint tem que apontar para index
 @bp.route("/login", methods=("POST", "GET"))
 def login():
     if g.user is not None:
-        flash(f"Você já está logado como {g.user['name']}, por que tentas logar novamente?")
+        flash(f"Você já está logado como {g.user['name']}, por que tentas logar novamente?", category='danger')
     elif request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -29,7 +29,7 @@ def login():
             session['user_id'] = user['id']
             return redirect(url_for('home.index'))
         
-        flash(error)
+        flash(error, category='danger')
     return render_template('auth/login.html')
 
 @bp.before_app_request
@@ -43,28 +43,32 @@ def load_logged_in_user():
             (user_id, )
         ).fetchone()
 
-def login_required(view):
+def login_required(level_access:str='cliente'):
     """Decorador para definir que a view deve ser protegida por login
     Args:
-        view (flask.views): View em questão
+        level_access (str, optional): Define qual nível de acesso mínimo da rota ('cliente', 'empresa'). Defaults to 'cliente'.
     Returns:
         view: view normal, caso esteja logado
-        redirect: caso não tenha permissão de acessar aquela rota
+        Http403: caso o usuário não tenha permissão de ver a rota.
     """
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            flash('Você precisa está logado para acessar a página solicitada!')
-            return redirect(url_for('auth.login'))
-        return view(**kwargs)
-    return wrapped_view
-
+    def _handler(view):
+        @functools.wraps(view)
+        def wrapped_view(**kwargs):
+            if g.user is None:
+                flash('Vocé precisa está logado para acessar a página solicitada!', category='danger')
+                return redirect(url_for('auth.login'))
+            if not can_access(level_access):
+                flash('Vocé não tem permissão para acessar a página solicitada!', category='danger')
+                abort(403)
+            return view(**kwargs)
+        return wrapped_view
+    return _handler
 
 @bp.route('/logout')
-@login_required
+@login_required()
 def logout():
     session.clear()
-    flash("Você foi deslogado com sucesso!")
+    flash("Você foi deslogado com sucesso!", category='success')
     return redirect(url_for('auth.login'))
 
 def can_access(access_type:str='empresa') -> bool:
@@ -79,6 +83,7 @@ def can_access(access_type:str='empresa') -> bool:
     if access_type == 'empresa':
         return g.user["permission_level"] >= EMPRESA_MIN_PERM_LEVEL
     elif access_type == 'cliente':
-        return g.user['permissio_level'] >= CLIENTE_PERM_LEVEL
+        print(g.user['permission_level'])
+        return g.user['permission_level'] >= CLIENTE_PERM_LEVEL
     else:
-        raise "Tipo de acesso não suportado, tem certeza que digitou corretamente?"
+        raise "Tipo de acesso não suportado, use 'empresa' ou 'cliente'"
