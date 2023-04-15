@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, render_template, flash
 from dotenv import dotenv_values
 
 config = dotenv_values(".env")
@@ -25,6 +25,11 @@ def create_app():
     def index(): return redirect(url_for("home.index"))
     
     @app.errorhandler(403)
-    def forbbiden(e): return "403 Forbbiden (Você não tem permissaõ de acessar essa página :D)"
+    def forbbiden(e): return render_template("403.html"), 403
+    
+    @app.errorhandler(404)
+    def notfound(e):
+        flash("Página não encontrada!", category="danger")
+        return render_template("404.html"), 404
     
     return app
