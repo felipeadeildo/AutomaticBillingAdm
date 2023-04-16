@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Clientes{% endblock title %}
+
+{% block content %}
+<h3>Lista de Clientes</h3>
+<p>Página {{ pagination_info.current_page+1 }} de {{ pagination_info.total_pages }}</p>
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Editar</th>
+        <th>Visualizar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for client in clients %}
+        <tr>
+          <td>{{ client.name }}</td>
+          <td>{{ client.username }}</td>
+          <td>{{ client.email }}</td>
+          <td><a class="btn" target="_blank" href="{{ url_for('home.editclient', client_id=client.id) }}">Editar</a></td>
+          <td><a class="btn" target="_blank" href="{{ url_for('home.client', client_id=client.id) }}">Visualizar</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% if pagination_info.has_prev %}
+  <a class="btn" href="{{ url_for('home.clients', page=pagination_info.prev_num) }}">Anterior</a>
+{% endif %}
+
+{% for client in clients %}
+  {% if client.index0 %}
+    {% if pagination_info.current_page == client.index0 %}
+      <a class="btn disabled">{{ client.index0 }}</a>
+    {% else %}
+      <a class="btn" href="{{ url_for('home.clients', page=client.index0) }}">{{ client.index0 + 1 }}</a>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if pagination_info.has_next %}
+  <a class="btn" href="{{ url_for('home.clients', page=pagination_info.next_num) }}">Próxima</a>
+{% endif %}
+{% endblock content %}

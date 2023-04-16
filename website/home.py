@@ -3,12 +3,12 @@ from .db import get_db
 from .auth import login_required
 from MySQLdb._exceptions import IntegrityError
 from werkzeug.security import generate_password_hash
-from .settings import CLIENTE_PERM_LEVEL
+from .settings import CLIENTE_PERM_LEVEL, PAGINATION_CLIENTS
 
 bp = Blueprint('home', __name__)
 
 @bp.route('/')
-@login_required()
+@login_required(level_access="cliente")
 def index():
     conn = get_db()
     features = conn.execute('SELECT * FROM features').fetchall()
@@ -52,10 +52,29 @@ def addclient():
 @bp.route("/clients")
 @login_required(level_access='empresa')
 def clients():
+    n_page = int(request.args.get("page", 0))
     conn = get_db()
-    clients = conn.execute('SELECT * FROM users WHERE role = "cliente"').fetchall()
+    clients = conn.execute(
+        'SELECT * FROM users WHERE role = "cliente" LIMIT {}, {}'.format(n_page*PAGINATION_CLIENTS, PAGINATION_CLIENTS)
+    ).fetchall() # TODO: Tratar quando não houver clients (clients == ())
+    
+    total_clients = conn.execute(
+        "SELECT COUNT(*) FROM users WHERE role = 'cliente'"
+    ).fetchone()['COUNT(*)']
+    total_pages = total_clients // PAGINATION_CLIENTS
+    pagination_info = {
+        "current_page": n_page,
+        "has_prev": bool(n_page),
+        "has_next": len(clients) == PAGINATION_CLIENTS and (n_page+1)*PAGINATION_CLIENTS != total_clients,
+        "prev_num": n_page - 1,
+        "next_num": n_page + 1,
+        "total_pages": total_pages if total_pages > 0 else 1
+    }
+    print(len(clients) == PAGINATION_CLIENTS)
+    print(n_page*PAGINATION_CLIENTS != total_clients)
     context = {
-        'clients': clients
+        'clients': clients,
+        "pagination_info": pagination_info
     }
     return render_template('home/clients.html', **context)
 
@@ -64,7 +83,12 @@ def clients():
 def reports():
     return "Em produção"
 
-@bp.route('/editclient')
+@bp.route('/editclientid/<int:client_id>')
+@login_required(level_access='empresa')
+def editclientid(client_id:int):
+    return "Em produção"
+
+@bp.route("/editclient")
 @login_required(level_access='empresa')
 def editclient():
     return "Em produção"
@@ -72,4 +96,9 @@ def editclient():
 @bp.route('/settings')
 @login_required(level_access='empresa')
 def settings():
+    return "Em produção"
+
+@bp.route('/client/<int:client_id>')
+@login_required(level_access='empresa')
+def client(client_id:int):
     return "Em produção"
