@@ -58,7 +58,7 @@ def login_required(level_access:str='cliente'):
                 flash('Vocé precisa está logado para acessar a página solicitada!', category='danger')
                 return redirect(url_for('auth.login'))
             if not can_access(level_access):
-                flash('Vocé não tem permissão para acessar a página solicitada!', category='danger')
+                flash('Você não tem permissão para acessar a página solicitada!', category='danger')
                 abort(403)
             return view(**kwargs)
         return wrapped_view
@@ -83,7 +83,6 @@ def can_access(access_type:str='empresa') -> bool:
     if access_type == 'empresa':
         return g.user["permission_level"] >= EMPRESA_MIN_PERM_LEVEL
     elif access_type == 'cliente':
-        print(g.user['permission_level'])
         return g.user['permission_level'] >= CLIENTE_PERM_LEVEL
     else:
         raise "Tipo de acesso não suportado, use 'empresa' ou 'cliente'"
