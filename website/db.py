@@ -75,7 +75,7 @@ def init_db():
     
     cursor.execute(
         "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
-        ('Editar Cliente', 'Editar um cliente existente', 'Empresa', 80, 'home.editclient')
+        ('Editar Clientes', 'Pesquisar e editar informações um cliente em específico.', 'Empresa', 80, 'home.editclient')
     )
     
     cursor.execute(
@@ -91,6 +91,11 @@ def init_db():
     cursor.execute(
         "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
         ('Configurações', "Configuraçães do sistema; Configurações referentes à taxa padrão de juros, etc.", 'Cliente', 50, "client.settings")
+    )
+    
+    cursor.execute(
+        "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Lista de Clientes', "Lista de todos os clientes cadastrados com mais algumas informações e opções.", 'Empresa', 80, "home.clients")
     )
     db.commit()
     
