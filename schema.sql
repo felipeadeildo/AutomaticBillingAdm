@@ -4,7 +4,7 @@ CREATE DATABASE __DBNAME__;
 
 USE __DBNAME__;
 
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS user (
     `id` int AUTO_INCREMENT,
     `name` varchar(255) NOT NULL,
     `username` varchar(255) NOT NULL UNIQUE,
@@ -16,37 +16,56 @@ CREATE TABLE IF NOT EXISTS users (
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS moradias (
-    `id` int AUTO_INCREMENT,
-    `client_id` int NOT NULL REFERENCES users(`id`),
-    `value` int NOT NULL,
-    `address` varchar(255) NOT NULL,
-    `type` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE IF NOT EXISTS inquilinos (
-    `id` int REFERENCES users(`id`),
+CREATE TABLE IF NOT EXISTS empresa (
+    `id` int AUTO_INCREMENT PRIMARY KEY,
     `name` varchar(255) NOT NULL,
-    `telephone` varchar(255) NOT NULL,
-    `email` varchar(255) NOT NULL,
-    `moradia_id` int NOT NULL REFERENCES moradias(`id`),
-    `taxa_juros` float NOT NULL DEFAULT 0.2,
-    `data_vencimento` date NOT NULL,
+    `email` varchar(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS imovel (
+    `id` int AUTO_INCREMENT,
+    `client_id` int NOT NULL REFERENCES user(`id`),
+    `valor_aluguel` float,
+    `valor_venda` float,
+    `taxa_adm_mensal` float,
+    `taxa_locacao` float,
+    `cep` varchar(255) NOT NULL,
+    `endereco` varchar(255) NOT NULL,
+    `numero` int, -- pode ser NUL caso não haja número
+    `complemento` varchar(255),
+    `bairro` varchar(255) NOT NULL,
+    `cidade` varchar(255) NOT NULL,
+    `estado` varchar(255) NOT NULL,
+    `tipo` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS pagamentos (
+CREATE TABLE IF NOT EXISTS morador (
+    `id` int REFERENCES users(`id`),
+    `nome` varchar(255) NOT NULL,
+    `cpf` varchar(11) NOT NULL,
+    `telefone` varchar(255) NOT NULL,
+    `email` varchar(255) NOT NULL,
+    `imovel_id` int NOT NULL REFERENCES imovel(`id`),
+    `cliente_id` int NOT NULL REFERENCES user(`id`),
+    `prazo_tolerancia` int NOT NULL,
+    `prazo_medidas_legais` int NOT NULL,
+    `data_inicio` date NOT NULL,
+    `data_termino` date NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS pagamento (
     `id` int AUTO_INCREMENT,
-    `inquilino_id` int NOT NULL REFERENCES inquilinos(`id`),
-    `value` int NOT NULL,
+    `morador_id` int NOT NULL REFERENCES morador(`id`),
+    `valor_pago` float NOT NULL,
     `data_vencimento` date NOT NULL,
     `data_pagamento` date,
     PRIMARY KEY (`id`)
 );
 
 
-CREATE TABLE IF NOT EXISTS features (
+CREATE TABLE IF NOT EXISTS feature (
     `id` int AUTO_INCREMENT,
     `category` varchar(255) NOT NULL,
     `min_perm_level` int NOT NULL,
