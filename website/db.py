@@ -67,36 +67,47 @@ def init_db():
     with open("schema.sql", "r", encoding="utf-8") as f:
         cursor.execute(f.read().replace('__DBNAME__', config['DB_NAME']))
     
-    # Adicionando algumas features no db
+    
     cursor.execute(
-        "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)", 
-        ('Adicionar Cliente', 'Adicionar um novo cliente', 'Empresa', 80, 'home.addclient')
+        "INSERT INTO feature (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)", 
+        ('Adicionar Empresa', 'Adiciona uma nova empresa (que possui imóveis e seus próprios clientes)', 'ADM Master', 80, 'home.add_enterprise')
     )
     
     cursor.execute(
-        "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
-        ('Editar Clientes', 'Pesquisar e editar informações um cliente em específico.', 'Empresa', 80, 'home.editclient')
+        "INSERT INTO feature (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Lista de Empresas', "Lista de todas as empresas cadastrados com mais algumas informações (quantidade de clientes, imóveis e etc.) e opções.", 'ADM Master', 80, "home.list_enterprises")
     )
     
     cursor.execute(
-        "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
-        ('Relatórios', 'Mostra informações de relatórios, estatísticas gerais', 'Empresa', 80, 'home.reports')
+        "INSERT INTO feature (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Editar Empresas', 'Pesquisar e editar informações uma empresa em específico.', 'ADM Master', 80, 'home.edit_enterprise')
     )
     
     cursor.execute(
-        "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
-        ('Configurações', "Configurações do sistema; Configurações referentes à frequência de cobranças, taxa padrão de juros, etc.", 'Empresa', 80, "home.settings")
+        "INSERT INTO feature (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Relatórios', 'Mostra informações de relatórios, estatísticas gerais', 'ADM Master', 80, 'home.reports')
     )
     
     cursor.execute(
-        "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
-        ('Configurações', "Configuraçães do sistema; Configurações referentes à taxa padrão de juros, etc.", 'Cliente', 50, "client.settings")
+        "INSERT INTO feature (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Configurações', "Configurações do sistema; Configurações referentes à frequência de cobranças, taxa padrão de juros, etc.", 'ADM Master', 80, "home.settings")
     )
     
     cursor.execute(
-        "INSERT INTO features (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
-        ('Lista de Clientes', "Lista de todos os clientes cadastrados com mais algumas informações e opções.", 'Empresa', 80, "home.clients")
+        "INSERT INTO feature (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Configurações', "Configuraçães do sistema; Configurações referentes à taxa padrão de juros, etc.", 'Empresa', 50, "enterprise.settings")
     )
+    
+    cursor.execute(
+        "INSERT INTO feature (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Adicionar Cliente', "Permite adicionar cliente (morador) relacionado à um imóvel determinando um valor de pagamento, email, telefone e etc.", 'Empresa', 50, "enterprise.add_resident")
+    )
+    
+    cursor.execute(
+        "INSERT INTO feature (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Adicionar Imóvel', "Permite adicionar um imóvel para que seja possível adicionar cliente (morador) na mesma; Informações incluem endereço, valor mensal do aluguel, tipo da casa e etc.", 'Empresa', 50, "enterprise.add_property")
+    )
+    
     db.commit()
     
 
@@ -118,7 +129,7 @@ def create_superuser(name, username, email, password):
     """
     db = get_db()
     db.execute(
-        "INSERT INTO users (name, username, email, password, permission_level, role) VALUES (%s, %s, %s, %s, 100, %s)",
+        "INSERT INTO user (name, username, email, password, permission_level, role) VALUES (%s, %s, %s, %s, 100, %s)",
         (name, username, email, generate_password_hash(password), 'Administrador')
     )
     db.commit()
