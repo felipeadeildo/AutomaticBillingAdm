@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Empresas{% endblock title %}
+
+{% block content %}
+<h3>Lista de Empresas</h3>
+<p>Página {{ pagination_info.current_page+1 }} de {{ pagination_info.total_pages }}</p>
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Editar</th>
+        <th>Visualizar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for empresa in empresas %}
+        <tr>
+          <td>{{ empresa.name }}</td>
+          <td>{{ empresa.username }}</td>
+          <td>{{ empresa.email }}</td>
+          <td><a class="btn" target="_blank" href="{{ url_for('home.edit_enterprise_id', enterprise_id=empresa.id) }}">Editar</a></td>
+          <td><a class="btn" target="_blank" href="{{ url_for('home.enterprise_infos', enterprise_id=empresa.id) }}">Visualizar</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% if pagination_info.has_prev %}
+  <a class="btn" href="{{ url_for('home.list_companies', page=pagination_info.prev_num) }}">Anterior</a>
+{% endif %}
+
+{% for empresa in empresas %}
+  {% if empresa.index0 %}
+    {% if pagination_info.current_page == empresa.index0 %}
+      <a class="btn disabled">{{ empresa.index0 }}</a>
+    {% else %}
+      <a class="btn" href="{{ url_for('home.empresas', page=empresa.index0) }}">{{ empresa.index0 + 1 }}</a>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if pagination_info.has_next %}
+  <a class="btn" href="{{ url_for('home.list_companies', page=pagination_info.next_num) }}">Próxima</a>
+{% endif %}
+{% endblock content %}

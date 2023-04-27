@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Cadastro de Cliente{% endblock %}
+{% block title %}Cadastro de Empresa{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -28,22 +28,32 @@
   <form class="col s12" method="post">
     <div class="row">
       <div class="input-field col s6">
-        <input id="name" type="text" class="validate" name="name">
-        <label for="name">Nome</label>
+        <input id="name" type="text" class="validate" name="name" required>
+        <label for="name">Nome da Empresa</label>
       </div>
       <div class="input-field col s6">
-        <input id="username" type="text" class="validate" name="username">
-        <label for="username">Nome de usuário</label>
+        <input id="username" type="text" class="validate" name="username" placeholder="Username do Usuário Padrão da Empresa" required>
+        <label for="email">Username</label>
       </div>
     </div>
     <div class="row">
       <div class="input-field col s6">
-        <input id="email" type="email" class="validate" name="email">
-        <label for="email">Email</label>
+        <input id="email" type="email" class="validate" name="email" required>
+        <label for="email">Email da Empresa</label>
       </div>
       <div class="input-field col s6">
-        <input id="password" type="password" class="validate" name="password">
+        <input id="password" type="password" class="validate" name="password" placeholder="Senha do Usuário Padrão da Empresa" required>
         <label for="password">Senha</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input id="name_user" type="text" class="validate" name="name_user" placeholder="Nome do Usuário Padrão da Empresa" required>
+        <label for="name_user">Nome do Usuário</label>
+      </div>
+      <div class="input-field col s6">
+        <input id="email_user" type="email" class="validate" name="email_user" placeholder="Email do Usuário Padrão da Empresa" required>
+        <label for="email_user">Email do Usuário</label>
       </div>
     </div>
     <div class="btn-fixed-action">

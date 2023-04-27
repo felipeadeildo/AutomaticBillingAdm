@@ -17,8 +17,8 @@ def create_app():
     from . import home
     app.register_blueprint(home.bp)
     
-    from . import client
-    app.register_blueprint(client.bp)
+    from . import enterprise
+    app.register_blueprint(enterprise.bp)
     
     
     @app.route("/")
