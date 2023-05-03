@@ -202,4 +202,3 @@ def enterprise_infos(enterprise_id:int):
     }
     
     return render_template("home/enterprise_infos.html", **context)
-    

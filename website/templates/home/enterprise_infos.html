@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{% block title %}Detalhes da Empresa{% endblock %}</h2>
+<h3>{% block title %}Detalhes da Empresa{% endblock %}</h3>
 <table class="striped">
     <thead>
         <tr>
@@ -17,51 +17,59 @@
     </tbody>
 </table>
 
-<h2>Clientes</h2>
+<h3>Clientes</h3>
 <ul class="collection">
-    {% for client in clients %}
-        <li class="collection-item avatar">
-            <i class="material-icons circle {% if client.status == 1 %}red{% else %}green{% endif %}">account_circle</i>
-            <span class="title">{{ client.nome }}</span>
-            <p>CPF: {{ client.cpf }}<br>
-            Telefone: {{ client.telefone }}<br>
-            Email: {{ client.email }}<br>
-            Prazo de tolerância: {{ client.prazo_tolerancia_prazo_medidas_legais }} dias<br>
-            Data de início: {{ client.data_inicio }}<br>
-            Data de término: {{ client.data_termino }}<br>
-            Valor do aluguel: R$ {{ imoveis[client.imovel_id].valor_aluguel }}<br>
-            Valor de venda: R$ {{ imoveis[client.imovel_id].valor_venda }}<br>
-            Taxa de administração mensal: R$ {{ imoveis[client.imovel_id].taxa_adm_mensal }}<br>
-            Taxa de locação: R$ {{ imoveis[client.imovel_id].taxa_locacao }}<br>
-            Tipo de imóvel: {{ imoveis[client.imovel_id].tipo }}
-            </p>
-        </li>
-    {% endfor %}
+    {% if clients %}
+        {% for client in clients %}
+            <li class="collection-item avatar">
+                <i class="material-icons circle {% if client.status == 1 %}red{% else %}green{% endif %}">account_circle</i>
+                <span class="title">{{ client.nome }}</span>
+                <p>CPF: {{ client.cpf }}<br>
+                Telefone: {{ client.telefone }}<br>
+                Email: {{ client.email }}<br>
+                Prazo de tolerância: {{ client.prazo_tolerancia_prazo_medidas_legais }} dias<br>
+                Data de início: {{ client.data_inicio }}<br>
+                Data de término: {{ client.data_termino }}<br>
+                Valor do aluguel: R$ {{ imoveis[client.imovel_id].valor_aluguel }}<br>
+                Valor de venda: R$ {{ imoveis[client.imovel_id].valor_venda }}<br>
+                Taxa de administração mensal: R$ {{ imoveis[client.imovel_id].taxa_adm_mensal }}<br>
+                Taxa de locação: R$ {{ imoveis[client.imovel_id].taxa_locacao }}<br>
+                Tipo de imóvel: {{ imoveis[client.imovel_id].tipo }}
+                </p>
+            </li>
+        {% endfor %}
+    {% else %}
+        <p>Nenhum cliente cadastrado ainda</p>
+    {% endif %}
 </ul>
 
-<h2>Imóveis</h2>
+<h3>Imóveis</h3>
 <ul class="collection">
-    {% for imovel in imoveis %}
-        <li class="collection-item avatar">
-            <i class="material-icons circle {% if imovel.is_ocupped %}blue{% else %}grey{% endif %}">home</i>
-            <span class="title">{{ imovel.tipo }}</span>
-            <p>Endereço: {{ imovel.endereco }}<br>
-            CEP: {{ imovel.cep }}<br>
-            Número: {{ imovel.numero }}<br>
-            Complemento: {{ imovel.complemento }}<br>
-            Bairro: {{ imovel.bairro }}<br>
-            Cidade: {{ imovel.cidade }}<br>
-            Estado: {{ imovel.estado }}<br>
-            Valor do aluguel: R$ {{ imovel.valor_aluguel }}<br>
-            Valor de venda: R$ {{ imovel.valor_venda }}<br>
-            Taxa de administração mensal: R$ {{ imovel.taxa_adm_mensal }}<br>
-            Taxa de locação: R$ {{ imovel.taxa_locacao }}
-            </p>
-        </li>
-    {% endfor %}
+    {% if imoveis %}
+        {% for imovel in imoveis %}
+            <li class="collection-item avatar">
+                <i class="material-icons circle {% if imovel.is_ocupped %}blue{% else %}grey{% endif %}">home</i>
+                <span class="title">{{ imovel.tipo }}</span>
+                <p>Endereço: {{ imovel.endereco }}<br>
+                CEP: {{ imovel.cep }}<br>
+                Número: {{ imovel.numero }}<br>
+                Complemento: {{ imovel.complemento }}<br>
+                Bairro: {{ imovel.bairro }}<br>
+                Cidade: {{ imovel.cidade }}<br>
+                Estado: {{ imovel.estado }}<br>
+                Valor do aluguel: R$ {{ imovel.valor_aluguel }}<br>
+                Valor de venda: R$ {{ imovel.valor_venda }}<br>
+                Taxa de administração mensal: R$ {{ imovel.taxa_adm_mensal }}<br>
+                Taxa de locação: R$ {{ imovel.taxa_locacao }}
+                </p>
+            </li>
+        {% endfor %}
+    {% else %}
+        <p>Nenhum imóvel cadastrado ainda</p>
+    {% endif %}
 </ul>
 
-<h2>Funcionários</h2>
+<h3>Funcionários</h3>
 <ul class="collection">
     {% for funcionario in funcionarios %}
         <li class="collection-item avatar">
