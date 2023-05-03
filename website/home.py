@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, request
+from flask import Blueprint, render_template, flash, request, abort
 from .db import get_db
 from .auth import login_required
 from werkzeug.security import generate_password_hash
@@ -40,9 +40,10 @@ def add_enterprise():
                 (name, email)
             )
             conn.commit()
+            enterprise_id = conn.execute("SELECT id FROM empresa WHERE email = %s", (email, )).fetchone()["id"]
             
-            conn.execute("INSERT INTO user (username, password, email, name, role, permission_level) VALUES (%s, %s, %s, %s, %s, %s)",
-                        (username, generate_password_hash(password), email_user, name_user, 'Empresa', EMPRESA_PERM_LEVEL))
+            conn.execute("INSERT INTO user (username, password, email, name, role, permission_level, enterprise_id) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                        (username, generate_password_hash(password), email_user, name_user, 'Empresa', EMPRESA_PERM_LEVEL, enterprise_id))
             conn.commit()
             flash(f'Empresa "{name}" adicionado com sucesso', category="success")
         else:
@@ -91,8 +92,27 @@ def reports():
 @bp.route('/editar-empresa-id/<int:enterprise_id>')
 @login_required(level_access='adm')
 def edit_enterprise_id(enterprise_id:int):
-    return f"Em produção {enterprise_id}"
-
+    conn = get_db()
+    enterprise_infos = conn.execute("SELECT * FROM empresa WHERE id = %s", (enterprise_id, )).fetchone()
+    if enterprise_infos is None:
+        abort(404)
+    
+    if request.method == "POST":
+        # TODO: Editar no banco de dados
+        pass
+    
+    default_user = conn.execute("SELECT * FROM user WHERE enterprise_id = %s ORDER BY id DESC", (enterprise_id, )).fetchone()
+    enterprise_infos = conn.execute("SELECT * FROM empresa WHERE id = %s", (enterprise_id, )).fetchone()
+    
+    context = {
+        "enterprise": enterprise_infos,
+        "enterprise_user": default_user,
+        "previous_page": "home.index"
+    }
+    
+    return render_template("home/edit_enterprise_id.html", **context)
+    
+    
 
 @bp.route("/editar-empresa")
 @login_required(level_access='adm')

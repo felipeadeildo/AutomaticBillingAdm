@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Empresa: {{ enterprise.name }}{% endblock title%}
+
+{% block content %}
+<div class="row">
+    {% with messages = get_flashed_messages(category_filter=["danger"]) %}
+    {% if messages %}
+      <ul class="collection">
+      {% for message in messages %}
+          <li class="collection-item red-text">{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+    {% endwith %}
+  
+    {% with messages = get_flashed_messages(category_filter=["success"]) %}
+    {% if messages %}
+      <ul class="collection">
+      {% for message in messages %}
+          <li class="collection-item green-text">{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+{% endwith %}
+<h2>Cadastro de Empresa</h2>
+  <div class="row">
+    <form class="col s12" method="post">
+      <div class="row">
+        <div class="input-field col s6">
+          <input id="name" name="name" type="text" value="{{ enterprise.name }}">
+          <label for="name">Nome da Empresa</label>
+        </div>
+        <div class="input-field col s6">
+          <input id="email" name="email" type="email" value="{{ enterprise.email }}">
+          <label for="email">Email da Empresa</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <input id="username" name="username" type="text" value="{{ enterprise_user.username }}">
+          <label for="username">Username Padrão</label>
+        </div>
+        <div class="input-field col s6">
+          <input id="password" name="password" type="password">
+          <label for="password">Senha do usuário padrão</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <input id="name_user" name="name_user" type="text" value="{{ enterprise_user.name }}">
+          <label for="name_user">Nome do usuário padrão</label>
+        </div>
+        <div class="input-field col s6">
+          <input id="email_user" name="email_user" type="email" value="{{ enterprise_user.email }}">
+          <label for="email_user">Email do usuário padrão</label>
+        </div>
+      </div>
+      <div class="row btn-fixed-action">
+        <a href="{{ url_for(previous_page) }}" class="btn waves-effect waves-light right"><i class="material-icons left">arrow_back</i>Voltar para a Home</a>
+        <button class="btn btn-block waves-effect waves-light left" type="submit" name="action">Editar
+          <i class="material-icons right">send</i>
+        </button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
