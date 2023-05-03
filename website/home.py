@@ -89,7 +89,7 @@ def list_enterprises():
 def reports():
     return "Em produção"
 
-@bp.route('/editar-empresa-id/<int:enterprise_id>')
+@bp.route('/editar-empresa-id/<int:enterprise_id>', methods=("POST", "GET"))
 @login_required(level_access='adm')
 def edit_enterprise_id(enterprise_id:int):
     conn = get_db()
@@ -97,12 +97,60 @@ def edit_enterprise_id(enterprise_id:int):
     if enterprise_infos is None:
         abort(404)
     
-    if request.method == "POST":
-        # TODO: Editar no banco de dados
-        pass
-    
     default_user = conn.execute("SELECT * FROM user WHERE enterprise_id = %s ORDER BY id DESC", (enterprise_id, )).fetchone()
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        username = request.form.get("username")
+        password = request.form.get("password")
+        name_user = request.form.get("name_user")
+        email_user = request.form.get("email_user")
+        if name != enterprise_infos["name"] and name is not None:
+            conn.execute(
+                "UPDATE empresa SET name = %s WHERE id = %s",
+                (name, enterprise_id)
+            )
+            conn.commit()
+            flash(f"Nome da empresa atualizado de '{enterprise_infos['name']}' para '{name}' com sucesso!", category="success")
+        if email != enterprise_infos["email"] and email is not None:
+            conn.execute(
+                "UPDATE empresa SET email = %s WHERE id = %s",
+                (email, enterprise_id)
+            )
+            conn.commit()
+            flash(f"Email da empresa atualizado de '{enterprise_infos['email']}' para '{email}' com sucesso!", category="success")
+        if username != default_user["username"] and username is not None:
+            conn.execute(
+                "UPDATE user SET username = %s WHERE id = %s",
+                (username, default_user["id"])
+            )
+            conn.commit()
+            flash(f"Username do usuário atualizado de '{default_user['username']}' para '{username}' com sucesso!", category="success")
+        if password is not None and password != '':
+            conn.execute(
+                "UPDATE user SET password = %s WHERE id = %s",
+                (generate_password_hash(password), default_user["id"])
+            )
+            conn.commit()
+            flash(f"Senha do usuário atualizada com sucesso!", category="success")
+        if name_user != default_user["name"] and name_user is not None:
+            conn.execute(
+                "UPDATE user SET name = %s WHERE id = %s",
+                (name_user, default_user["id"])
+            )
+            conn.commit()
+            flash(f"Nome do usuário atualizado de '{default_user['name']}' para '{name_user}' com sucesso!", category="success")
+        if email_user != default_user["email"] and email_user is not None:
+            conn.execute(
+                "UPDATE user SET email = %s WHERE id = %s",
+                (email_user, default_user["id"])
+            )
+            conn.commit()
+            flash(f"Email do usuário atualizado de '{default_user['email']}' para '{email_user}' com sucesso!", category="success")
+            
+    
     enterprise_infos = conn.execute("SELECT * FROM empresa WHERE id = %s", (enterprise_id, )).fetchone()
+    default_user = conn.execute("SELECT * FROM user WHERE enterprise_id = %s ORDER BY id DESC", (enterprise_id, )).fetchone()
     
     context = {
         "enterprise": enterprise_infos,
@@ -127,4 +175,31 @@ def settings():
 @bp.route('/empresa/<int:enterprise_id>')
 @login_required(level_access='adm')
 def enterprise_infos(enterprise_id:int):
-    return "Em produção"
+    conn = get_db()
+    enterprise_infos = conn.execute("SELECT * FROM empresa WHERE id = %s", (enterprise_id, )).fetchone()
+    if enterprise_infos is None:
+        abort(404)
+    
+    clients = conn.execute("SELECT * FROM morador WHERE enterprise_id = %s", (enterprise_id, )).fetchall()
+    
+    imoveis = conn.execute("SELECT * FROM imovel WHERE enterprise_id = %s", (enterprise_id, )).fetchall()
+    imoveis_ids = [imovel["id"] for imovel in imoveis]
+    for imovel in imoveis:
+        imovel["is_occuped"] = True if conn.execute("SELECT COUNT(*) FROM morador WHERE imovel_id = %s", (imovel["id"], )).fetchone()["COUNT(*)"] > 0 else False
+    imoveis = {
+       imovel_id: attrs
+       for imovel_id, attrs in zip(imoveis_ids, imoveis)
+    }
+    
+    funcionarios = conn.execute("SELECT * FROM user WHERE enterprise_id = %s", (enterprise_id, )).fetchall()
+    
+    context = {
+        "enterprise_infos": enterprise_infos,
+        "clients": clients,
+        "imoveis": imoveis,
+        "funcionarios": funcionarios,
+        "previous_page": "home.index"
+    }
+    
+    return render_template("home/enterprise_infos.html", **context)
+    

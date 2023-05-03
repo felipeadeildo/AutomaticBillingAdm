@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS user (
 
 CREATE TABLE IF NOT EXISTS imovel (
     `id` int AUTO_INCREMENT,
-    `client_id` int NOT NULL REFERENCES user(`id`),
+    `enterprise_Id` int NOT NULL REFERENCES empresa(`id`),
     `valor_aluguel` float,
     `valor_venda` float,
     `taxa_adm_mensal` float,
@@ -52,11 +52,12 @@ CREATE TABLE IF NOT EXISTS morador (
     `telefone` varchar(255) NOT NULL,
     `email` varchar(255) NOT NULL,
     `imovel_id` int NOT NULL REFERENCES imovel(`id`),
-    `cliente_id` int NOT NULL REFERENCES user(`id`),
+    `enterprise_id` int NOT NULL REFERENCES empresa(`id`),
     `prazo_tolerancia` int NOT NULL,
     `prazo_medidas_legais` int NOT NULL,
     `data_inicio` date NOT NULL,
     `data_termino` date NOT NULL,
+    `status` tinyint NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 );
 
