@@ -4,6 +4,14 @@ CREATE DATABASE __DBNAME__;
 
 USE __DBNAME__;
 
+
+CREATE TABLE IF NOT EXISTS empresa (
+    `id` int AUTO_INCREMENT PRIMARY KEY,
+    `name` varchar(255) NOT NULL,
+    `email` varchar(255) NOT NULL
+);
+
+
 CREATE TABLE IF NOT EXISTS user (
     `id` int AUTO_INCREMENT,
     `name` varchar(255) NOT NULL,
@@ -13,14 +21,10 @@ CREATE TABLE IF NOT EXISTS user (
     `password` varchar(255) NOT NULL,
     `permission_level` int DEFAULT 0,
     `role` varchar(255) NOT NULL,
+    `enterprise_id` int REFERENCES empresa(`id`),
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS empresa (
-    `id` int AUTO_INCREMENT PRIMARY KEY,
-    `name` varchar(255) NOT NULL,
-    `email` varchar(255) NOT NULL
-);
 
 CREATE TABLE IF NOT EXISTS imovel (
     `id` int AUTO_INCREMENT,
@@ -40,6 +44,7 @@ CREATE TABLE IF NOT EXISTS imovel (
     PRIMARY KEY (`id`)
 );
 
+
 CREATE TABLE IF NOT EXISTS morador (
     `id` int REFERENCES users(`id`),
     `nome` varchar(255) NOT NULL,
@@ -54,6 +59,7 @@ CREATE TABLE IF NOT EXISTS morador (
     `data_termino` date NOT NULL,
     PRIMARY KEY (`id`)
 );
+
 
 CREATE TABLE IF NOT EXISTS pagamento (
     `id` int AUTO_INCREMENT,
