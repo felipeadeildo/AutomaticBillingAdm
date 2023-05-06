@@ -11,7 +11,7 @@
     <div class="container">
       <span class="brand-logo">{% if g.user %}Olá, {{ g.user.name }} {% else %} Sistema de Aluguéis{% endif %}</span>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="{{ url_for('home.index') }}">Home</a></li>
+        <li><a href="{{ url_for('home.index') }}">Home<i class="material-icons right center-align">home</i></a></li>
         {% if g.user %}
         <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
         {% else %}
@@ -23,6 +23,17 @@
   <div class="container">
     {% block content %}{% endblock %}
   </div>
-  <script src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.highlight.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+  <script>
+    $(document).ready(function () {
+      M.AutoInit();
+      update_hidden_counts();
+    });
+  </script>
+
+  {% block scripts %}
+  {% endblock scripts %}
 </body>
 </html>

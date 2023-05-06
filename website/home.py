@@ -167,10 +167,12 @@ def edit_enterprise_id(enterprise_id:int):
 def edit_enterprise():
     return "Em produção"
 
+
 @bp.route('/settings')
 @login_required(level_access='adm')
 def settings():
     return "Em produção"
+
 
 @bp.route('/empresa/<int:enterprise_id>')
 @login_required(level_access='adm')

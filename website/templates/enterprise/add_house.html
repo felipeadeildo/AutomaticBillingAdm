@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastro de Imóvel{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages(category_filter=["danger"]) %}
+{% if messages %}
+  <ul class="collection">
+    {% for message in messages %}
+      <li class="collection-item red-text">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endwith %}
+
+{% with messages = get_flashed_messages(category_filter=["success"]) %}
+{% if messages %}
+  <ul class="collection">
+    {% for message in messages %}
+      <li class="collection-item green-text">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endwith %}
+<h2>Cadastro de Morador</h2>
+<form method="post" class="m12">
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="cep" name="cep" type="text" class="validate" required> 
+      <label for="cep">CEP</label>
+    </div>
+    <div class="input-field col s6">
+      <input id="endereco" name="endereco" type="text" class="validate" required>
+      <label for="endereco" id="endereco_label">Endereço</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s4">
+      <input id="estado" name="estado" type="tel" class="validate" required>
+      <label for="estado" id="estado_label">Estado</label>
+    </div>
+    <div class="input-field col s4">
+      <input id="cidade" name="cidade" type="text" class="validate" required>
+      <label for="cidade" id="cidade_label">Cidade</label>
+    </div>
+    <div class="input-field col s4">
+      <input id="bairro" name="bairro" type="text" class="validate" required>
+      <label for="bairro" id="bairro_label">Bairro</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="complemento" name="complemento" type="text" class="validate">
+      <label for="complemento" id="complemento_label">Complemento</label>
+    </div>
+    <div class="input-field col s6">
+      <select name="tipo" required>
+        <option value="" disabled selected>Escolha uma opção</option>
+        {% for tipo_imovel in tipos_imovel %}
+          <option value="tipo_imovel">{{ tipo_imovel }}</option>
+        {% endfor %}
+      </select>
+      <label for="tipo">Tipo do Imóvel</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s3">
+      <input type="number" id="valor_aluguel" name="valor_aluguel" step="0.01" min="0" class="validate" required>
+      <label for="valor_aluguel">Valor de Aluguel</label>
+    </div>
+    <div class="input-field col s3">
+      <input type="number" id="valor_venda" name="valor_venda" step="0.01" min="0" class="validate" required>
+      <label for="valor_venda">Valor de Venda</label>
+    </div>
+    <div class="input-field col s3">
+      <input type="number" id="taxa_adm_mensal" name="taxa_adm_mensal" step="0.01" min="0" max="100" class="validate" required>
+      <label for="taxa_adm_mensal">Taxa de Administração Geral</label>
+    </div>
+    <div class="input-field col s3">
+      <input type="number" id="taxa_locacao" name="taxa_locacao" step="0.01" min="0" max="100" class="validate" required>
+      <label for="taxa_locacao">Taxa de Locacao</label>
+    </div>
+  </div>
+  {% if enterprise_id %}
+    <input name="enterprise_id" value={{ enterprise_id }} type="hidden">
+  {% else %}
+  <div class="row">
+  <div class="input-field col s12">
+    <select name="enterprise_id" id="enterprise_id" required>
+      <option disabled selected hidden>Selecione a Empresa a quem se destina este Imóvel</option>
+      {% for enterprise in enterprises %}
+        <option value="{{ enterprise.id }}">{{ enterprise.name }} ({{ enterprise.email }})</option>
+      {% endfor %}
+    </select>
+    <label for="enterprise_id">Empresa</label>
+  </div>
+  </div>
+  {% endif %}
+
+  <div class="btn-fixed-action">
+    <a href="{{ url_for(previous_page) }}" class="btn waves-effect waves-light right"><i class="material-icons left">arrow_back</i>Voltar para a Home</a>
+    <button class="btn btn-block waves-effect waves-light left" type="submit" name="action">Cadastrar
+      <i class="material-icons right">send</i>
+    </button>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/add_house.js') }}"></script>
+{% endblock scripts %}

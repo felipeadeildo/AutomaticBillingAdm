@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% with messages = get_flashed_messages(category_filter=["danger"]) %}
+{% if messages %}
+  <ul class="collection">
+  {% for message in messages %}
+      <li class="collection-item red-text">{{ message }}</li>
+  {% endfor %}
+  </ul>
+{% endif %}
+{% endwith %}
+
+{% with messages = get_flashed_messages(category_filter=["success"]) %}
+{% if messages %}
+  <ul class="collection">
+  {% for message in messages %}
+      <li class="collection-item green-text">{{ message }}</li>
+  {% endfor %}
+  </ul>
+{% endif %}
+{% endwith %}
+<h2>Cadastro de Morador</h2>
+<form method="post" class="m12">
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="nome" name="nome" type="text" class="validate" required> 
+      <label for="nome">Nome Completo</label>
+    </div>
+    <div class="input-field col s6">
+      <input id="cpf" name="cpf" type="text" class="validate" required>
+      <label for="cpf">CPF</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="telefone" name="telefone" type="tel" class="validate" required>
+      <label for="telefone">Telefone</label>
+    </div>
+    <div class="input-field col s6">
+      <input id="email" name="email" type="email" class="validate" required>
+      <label for="email">Email</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="prazo_tolerancia" name="prazo_tolerancia" type="number" min="0" max="30" class="validate" required>
+      <label for="prazo_tolerancia">Prazo Tolerância (dias)</label>
+    </div>
+    <div class="input-field col s6">
+      <input id="prazo_medidas_legais" name="prazo_medidas_legais" type="number" min="0" max="30" class="validate" required>
+      <label for="prazo_medidas_legais">Prazo Medidas Legais (dias)</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="data_inicio" name="data_inicio" type="text" class="datepicker validate" required>
+      <label for="data_inicio">Data Inicio</label>
+    </div>
+    <div class="input-field col s6">
+      <input id="data_termino" name="data_termino" type="text" class="datepicker validate" required>
+      <label for="data_termino">Data Término</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      <select id="imovel_id" name="imovel_id" required>
+        <option disabled selected hidden>Selecione uma Imóvel para este Morador</option>
+
+        {% for imovel in imoveis %}
+        <option value="{{ imovel.id }}">{{ imovel.endeco }}, {{ imovel.numero }}, {{ imovel.complemento }}, {{ imovel.bairro }}, {{ imovel.cidade }}/{{ imovel.estado }} - {{ imovel.tipo }}</option>
+        {% endfor %}
+      </select>
+      <label for="imovel_id">Imóvel</label>
+    </div>
+  </div>
+
+  {% if enterprise_id %}
+    <input name="enterprise_id" value={{ enterprise_id }} type="hidden">
+  {% else %}
+  <div class="row">
+  <div class="input-field col s12">
+    <select name="enterprise_id" id="enterprise_id" required>
+      <option disabled selected hidden>Selecione a Empresa a quem se destina o Morador</option>
+      {% for enterprise in enterprises %}
+        <option value="{{ enterprise.id }}">{{ enterprise.name }} ({{ enterprise.email }})</option>
+      {% endfor %}
+    </select>
+    <label for="enterprise_id">Empresa</label>
+  </div>
+  </div>
+  {% endif %}
+
+  <div class="btn-fixed-action">
+    <a href="{{ url_for(previous_page) }}" class="btn waves-effect waves-light right"><i class="material-icons left">arrow_back</i>Voltar para a Home</a>
+    <button class="btn btn-block waves-effect waves-light left" type="submit" name="action">Cadastrar
+      <i class="material-icons right">send</i>
+    </button>
+  </div>
+</form>
+
+{% endblock %}
