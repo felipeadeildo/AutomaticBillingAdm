@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS user (
 
 CREATE TABLE IF NOT EXISTS imovel (
     `id` int AUTO_INCREMENT,
-    `enterprise_Id` int NOT NULL REFERENCES empresa(`id`),
+    `enterprise_id` int NOT NULL REFERENCES empresa(`id`),
     `valor_aluguel` float,
     `valor_venda` float,
     `taxa_adm_mensal` float,
