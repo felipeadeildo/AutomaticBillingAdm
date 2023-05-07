@@ -19,8 +19,10 @@ cep_input.addEventListener('change', () => {
             .then(response => response.json())
             .then(data => {
                 // preenche os campos com os dados da resposta da API
-                estado_input.value = data.uf;
-                estado_label.classList.add("active");
+                if (data.uf != "") {
+                    estado_input.value = data.uf;
+                    estado_label.classList.add("active");
+                }
                 cidade_input.value = data.localidade;
                 cidade_label.classList.add("active");
                 logradouro_input.value = data.logradouro;

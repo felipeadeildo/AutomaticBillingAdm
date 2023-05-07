@@ -2,7 +2,7 @@ from flask import Blueprint, request, g, render_template, flash
 from .db import get_db
 from .auth import login_required
 from datetime import datetime
-from .settings import TIPOS_IMOVEIS
+from .settings import TIPOS_IMOVEIS, EMPRESA_PERM_LEVEL
 
 bp = Blueprint("enterprise", __name__, url_prefix="/client")
 
@@ -25,8 +25,8 @@ def add_resident():
         email = request.form["email"]
         prazo_tolerancia = request.form["prazo_tolerancia"]
         prazo_medidas_legais = request.form["prazo_medidas_legais"]
-        data_inicio = datetime.strptime(request.form["data_inicio"], "%B %d, %Y") # May 26, 2023
-        data_termino = datetime.strptime(request.form["data_termino"], "%B %d, %Y")
+        data_inicio = datetime.strptime(request.form["data_inicio"], "%b %d, %Y") # May 26, 2023
+        data_termino = datetime.strptime(request.form["data_termino"], "%b %d, %Y")
         imovel_id = request.form["imovel_id"]
         # TODO: Verificar se imovel_id realmente existe
         
@@ -39,7 +39,25 @@ def add_resident():
         conn.commit()
         flash(f"Morador {nome} ({email}) foi adicionado com sucesso ao banco de dados relacionado ao imóvel de id {imovel_id}", category="success")
     
-    imoveis = conn.execute("SELECT * FROM imovel WHERE id NOT IN (SELECT imovel_id FROM morador) AND enterprise_id = %s", (enterprise_id, )).fetchall()
+    if g.user["permission_level"] >= EMPRESA_PERM_LEVEL:
+        imoveis = conn.execute(
+            "SELECT * FROM imovel WHERE id NOT IN (SELECT imovel_id FROM morador)"
+        ).fetchall()
+        empresas = conn.execute(
+            "SELECT id, name, email FROM empresa WHERE id IN (SELECT enterprise_id FROM imovel WHERE id NOT IN (SELECT imovel_id FROM morador))"
+        ).fetchall()
+
+        # Combine the results into a single list of dictionaries
+        result = []
+        for imovel in imoveis:
+            empresa = next((e for e in empresas if e["id"] == imovel["enterprise_id"]), None)
+            if empresa:
+                result.append({**imovel, **empresa})
+        imoveis = result.copy()
+    else:
+        imoveis = conn.execute("SELECT * FROM imovel WHERE id NOT IN (SELECT imovel_id FROM morador) AND enterprise_id = %s", (enterprise_id, )).fetchall()
+
+    print(imoveis)
     enterprises = conn.execute("SELECT * FROM empresa").fetchall()
     context = {
         "imoveis": imoveis,

@@ -22,7 +22,7 @@
   </ul>
 {% endif %}
 {% endwith %}
-<h2>Cadastro de Morador</h2>
+<h2>Cadastro de Imóvel</h2>
 <form method="post" class="m12">
   <div class="row">
     <div class="input-field col s6">
@@ -49,13 +49,17 @@
     </div>
   </div>
   <div class="row">
-    <div class="input-field col s6">
+    <div class="input-field col s4">
       <input id="complemento" name="complemento" type="text" class="validate">
       <label for="complemento" id="complemento_label">Complemento</label>
     </div>
-    <div class="input-field col s6">
+    <div class="input-field col s4">
+      <input id="numero" name="numero" type="number" min="0" class="validate">
+      <label for="numero" id="numero_label">Número</label>
+    </div>
+    <div class="input-field col s4">
       <select name="tipo" required>
-        <option value="" disabled selected>Escolha uma opção</option>
+        <option value="" disabled selected hidden>Escolha uma opção</option>
         {% for tipo_imovel in tipos_imovel %}
           <option value="tipo_imovel">{{ tipo_imovel }}</option>
         {% endfor %}
@@ -82,7 +86,7 @@
     </div>
   </div>
   {% if enterprise_id %}
-    <input name="enterprise_id" value={{ enterprise_id }} type="hidden">
+    <input name="enterprise_id" value="{{ enterprise_id }}" type="hidden">
   {% else %}
   <div class="row">
   <div class="input-field col s12">

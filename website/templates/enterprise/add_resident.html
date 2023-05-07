@@ -65,10 +65,9 @@
   <div class="row">
     <div class="input-field col s12">
       <select id="imovel_id" name="imovel_id" required>
-        <option disabled selected hidden>Selecione uma Imóvel para este Morador</option>
-
+        <option disabled selected hidden>Selecione um Imóvel para este Morador</option>
         {% for imovel in imoveis %}
-        <option value="{{ imovel.id }}">{{ imovel.endeco }}, {{ imovel.numero }}, {{ imovel.complemento }}, {{ imovel.bairro }}, {{ imovel.cidade }}/{{ imovel.estado }} - {{ imovel.tipo }}</option>
+        <option value="{{ imovel.id }}">{{ imovel.endereco }}, {{ imovel.numero }}, {{ imovel.complemento }}, {{ imovel.bairro }}, {{ imovel.cidade }}/{{ imovel.estado }} - {{ imovel.tipo }} {% if not enterprise_id %}<strong>{{ imovel.name }} ({{ imovel.email }})</strong>{% endif %}</option>
         {% endfor %}
       </select>
       <label for="imovel_id">Imóvel</label>
