@@ -108,6 +108,11 @@ def init_db():
         ('Adicionar Imóvel', "Permite adicionar um imóvel para que seja possível adicionar cliente (morador) na mesma; Informações incluem endereço, valor mensal do aluguel, tipo da casa e etc.", 'Empresa', 50, "enterprise.add_property")
     )
     
+    cursor.execute(
+        "INSERT INTO feature (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ('Lista de Clientes', "Lista todos os clientes dentro do banco de dados de uma determinada empresa.", 'Empresa', 50, "enterprise.list_residents")
+    )
+    
     db.commit()
     
 

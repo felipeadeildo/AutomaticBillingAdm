@@ -106,5 +106,5 @@ def add_property():
 
 @bp.route("/inquilinos")
 @login_required()
-def listinquilinos():
+def list_residents():
     return "Em produção"
