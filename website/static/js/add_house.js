@@ -21,16 +21,29 @@ cep_input.addEventListener('change', () => {
                 // preenche os campos com os dados da resposta da API
                 if (data.uf != "") {
                     estado_input.value = data.uf;
+                    estado_input.classList.add("valid");
                     estado_label.classList.add("active");
                 }
-                cidade_input.value = data.localidade;
-                cidade_label.classList.add("active");
-                logradouro_input.value = data.logradouro;
-                logradouro_label.classList.add("active");
-                complemento_input.value = data.complemento;
-                complemento_label.classList.add("active");
-                bairro_input.value = data.bairro;
-                bairro_label.classList.add("active");
+                if (data.localidade != "") {
+                    cidade_input.value = data.localidade;
+                    cidade_input.classList.add("valid");
+                    cidade_label.classList.add("active");
+                }
+                if (data.logradouro != "") {
+                    logradouro_input.value = data.logradouro;
+                    logradouro_input.classList.add("valid");
+                    logradouro_label.classList.add("active");
+                }
+                if (data.complemento != "") {
+                    complemento_input.value = data.complemento;
+                    complemento_input.classList.add("valid");
+                    complemento_label.classList.add("active");
+                }
+                if (data.bairro != "") {
+                    bairro_input.value = data.bairro;
+                    bairro_input.classList.add("valid");
+                    bairro_label.classList.add("active");
+                }
             })
             .catch(error => console.error(error));
     }

@@ -187,14 +187,15 @@ def enterprise_infos(enterprise_id:int):
     imoveis = conn.execute("SELECT * FROM imovel WHERE enterprise_id = %s", (enterprise_id, )).fetchall()
     imoveis_ids = [imovel["id"] for imovel in imoveis]
     for imovel in imoveis:
-        imovel["is_occuped"] = True if conn.execute("SELECT COUNT(*) FROM morador WHERE imovel_id = %s", (imovel["id"], )).fetchone()["COUNT(*)"] > 0 else False
+        imovel["is_occuped"] = conn.execute(
+            "SELECT COUNT(*) FROM morador WHERE imovel_id = %s", 
+            (imovel["id"], )
+        ).fetchone()["COUNT(*)"]
     imoveis = {
        imovel_id: attrs
        for imovel_id, attrs in zip(imoveis_ids, imoveis)
     }
-    
     funcionarios = conn.execute("SELECT * FROM user WHERE enterprise_id = %s", (enterprise_id, )).fetchall()
-    
     context = {
         "enterprise_infos": enterprise_infos,
         "clients": clients,

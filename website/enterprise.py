@@ -57,7 +57,6 @@ def add_resident():
     else:
         imoveis = conn.execute("SELECT * FROM imovel WHERE id NOT IN (SELECT imovel_id FROM morador) AND enterprise_id = %s", (enterprise_id, )).fetchall()
 
-    print(imoveis)
     enterprises = conn.execute("SELECT * FROM empresa").fetchall()
     context = {
         "imoveis": imoveis,

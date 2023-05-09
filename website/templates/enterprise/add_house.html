@@ -54,14 +54,14 @@
       <label for="complemento" id="complemento_label">Complemento</label>
     </div>
     <div class="input-field col s4">
-      <input id="numero" name="numero" type="number" min="0" class="validate">
+      <input id="numero" name="numero" type="text" min="0" class="validate"> <!-- type="text" to get alphanumbers of house -->
       <label for="numero" id="numero_label">Número</label>
     </div>
     <div class="input-field col s4">
       <select name="tipo" required>
         <option value="" disabled selected hidden>Escolha uma opção</option>
         {% for tipo_imovel in tipos_imovel %}
-          <option value="tipo_imovel">{{ tipo_imovel }}</option>
+          <option value="{{ tipo_imovel }}">{{ tipo_imovel }}</option>
         {% endfor %}
       </select>
       <label for="tipo">Tipo do Imóvel</label>

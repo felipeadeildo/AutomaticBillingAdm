@@ -18,50 +18,99 @@
 </table>
 
 <h3>Clientes</h3>
-<ul class="collection">
-    {% if clients %}
-        {% for client in clients %}
-            <li class="collection-item avatar">
-                <i class="material-icons circle {% if client.status == 1 %}red{% else %}green{% endif %}">account_circle</i>
-                <span class="title">{{ client.nome }}</span>
-                <p>CPF: {{ client.cpf }}<br>
-                Telefone: {{ client.telefone }}<br>
-                Email: {{ client.email }}<br>
-                Prazo de tolerância: {{ client.prazo_tolerancia_prazo_medidas_legais }} dias<br>
-                Data de início: {{ client.data_inicio }}<br>
-                Data de término: {{ client.data_termino }}<br>
-                Valor do aluguel: R$ {{ imoveis[client.imovel_id].valor_aluguel }}<br>
-                Valor de venda: R$ {{ imoveis[client.imovel_id].valor_venda }}<br>
-                Taxa de administração mensal: R$ {{ imoveis[client.imovel_id].taxa_adm_mensal }}<br>
-                Taxa de locação: R$ {{ imoveis[client.imovel_id].taxa_locacao }}<br>
-                Tipo de imóvel: {{ imoveis[client.imovel_id].tipo }}
-                </p>
-            </li>
-        {% endfor %}
-    {% else %}
-        <p>Nenhum cliente cadastrado ainda</p>
-    {% endif %}
-</ul>
+<div class="row">
+    <ul class="collection">
+        {% if clients %}
+            {% for client in clients %}
+            <div class="col s6">
+                <li class="collection-item avatar">
+                    <i class="material-icons circle {% if client.status == 1 %}red{% else %}green{% endif %}">account_circle</i>
+                    <span class="title">{{ client.nome }}</span>
+                    <table class="responsive-table">
+                        <tbody>
+                        <tr>
+                            <td><strong>Nome:</strong> {{ client.nome }}</td>
+                            <td><strong>CPF:</strong> {{ client.cpf }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Telefone:</strong> {{ client.telefone }}</td>
+                            <td><strong>Email:</strong> {{ client.email }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Prazo de tolerância:</strong> {{ client.prazo_tolerancia_prazo_medidas_legais }} dias</td>
+                            <td><strong>Data de início:</strong> {{ client.data_inicio }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Data de término:</strong> {{ client.data_termino }}</td>
+                            <td><strong>Tipo de imóvel:</strong> {{ imoveis[client.imovel_id].tipo }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Valor do aluguel:</strong> R$ {{ imoveis[client.imovel_id].valor_aluguel }}</td>
+                            <td><strong>Valor de venda:</strong> R$ {{ imoveis[client.imovel_id].valor_venda }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Taxa de administração mensal:</strong> R$ {{ imoveis[client.imovel_id].taxa_adm_mensal }}</td>
+                            <td><strong>Taxa de locação:</strong> R$ {{ imoveis[client.imovel_id].taxa_locacao }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </li>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>Nenhum cliente cadastrado ainda</p>
+        {% endif %}
+    </ul>
+</div>                  
+
 
 <h3>Imóveis</h3>
 <ul class="collection">
     {% if imoveis %}
-        {% for imovel in imoveis %}
+        {% for imovel in imoveis.values() %}
             <li class="collection-item avatar">
-                <i class="material-icons circle {% if imovel.is_ocupped %}blue{% else %}grey{% endif %}">home</i>
-                <span class="title">{{ imovel.tipo }}</span>
-                <p>Endereço: {{ imovel.endereco }}<br>
-                CEP: {{ imovel.cep }}<br>
-                Número: {{ imovel.numero }}<br>
-                Complemento: {{ imovel.complemento }}<br>
-                Bairro: {{ imovel.bairro }}<br>
-                Cidade: {{ imovel.cidade }}<br>
-                Estado: {{ imovel.estado }}<br>
-                Valor do aluguel: R$ {{ imovel.valor_aluguel }}<br>
-                Valor de venda: R$ {{ imovel.valor_venda }}<br>
-                Taxa de administração mensal: R$ {{ imovel.taxa_adm_mensal }}<br>
-                Taxa de locação: R$ {{ imovel.taxa_locacao }}
-                </p>
+                <i class="material-icons circle {% if imovel.is_occuped == 1 %}blue{% else %}grey{% endif %}">home</i>
+                <span class="title green-text">{{ imovel.tipo }}</span>
+                <table class="striped responsive-table">
+                    <tbody>
+                      <tr>
+                        <td class="grey white-text">Endereço</td>
+                        <td>{{ imovel.endereco }}</td>
+                        <td class="grey white-text">CEP</td>
+                        <td>{{ imovel.cep }}</td>
+                      </tr>
+                      <tr>
+                        <td class="grey white-text">Número</td>
+                        <td>{{ imovel.numero }}</td>
+                        <td class="grey white-text">Complemento</td>
+                        <td>{{ imovel.complemento }}</td>
+                      </tr>
+                      <tr>
+                        <td class="grey white-text">Bairro</td>
+                        <td>{{ imovel.bairro }}</td>
+                        <td class="grey white-text">Cidade</td>
+                        <td>{{ imovel.cidade }}</td>
+                      </tr>
+                      <tr>
+                        <td class="grey white-text">Estado</td>
+                        <td>{{ imovel.estado }}</td>
+                        <td class="grey white-text">Valor do aluguel</td>
+                        <td class="green-text">R$ {{ imovel.valor_aluguel }}</td>
+                      </tr>
+                      <tr>
+                        <td class="grey white-text">Valor de venda</td>
+                        <td class="green-text">R$ {{ imovel.valor_venda }}</td>
+                        <td class="grey white-text">Taxa de administração mensal</td>
+                        <td>{{ imovel.taxa_adm_mensal }}%</td>
+                      </tr>
+                      <tr>
+                        <td class="grey white-text">Taxa de locação</td>
+                        <td class="green-text">R$ {{ imovel.taxa_locacao }}</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>                                  
             </li>
         {% endfor %}
     {% else %}
@@ -70,18 +119,29 @@
 </ul>
 
 <h3>Funcionários</h3>
-<ul class="collection">
-    {% for funcionario in funcionarios %}
-        <li class="collection-item avatar">
-            <i class="material-icons circle purple">person</i>
-            <span class="title">{{ funcionario.nome }}</span>
-            <p>Username: {{ funcionario.username }}<br>
-            Email: {{ funcionario.email }}<br>
-            Telefone: {{ funcionario.telefone }}
-            </p>
-        </li>
-    {% endfor %}
-</ul>
+<div class="row">
+    <ul class="collection">
+        {% for funcionario in funcionarios %}
+        <div class="col s6">
+            <li class="collection-item avatar">
+                <i class="material-icons circle purple">person</i>
+                <span class="title">{{ funcionario.nome }}</span>
+                <table class="responsive-table">
+                    <tbody>
+                    <tr>
+                        <td><strong>Username:</strong> {{ funcionario.username }}</td>
+                        <td><strong>Email:</strong> {{ funcionario.email }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Telefone:</strong> {{ funcionario.telefone }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </li>
+        </div>
+        {% endfor %}
+    </ul>
+</div>
 
 <a href="{{ url_for(previous_page) }}" class="btn waves-effect waves-light right">Voltar ao Home<i class="material-icons left">arrow_back</i></a>
 {% endblock %}
