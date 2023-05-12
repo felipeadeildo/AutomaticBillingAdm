@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS morador (
     `prazo_medidas_legais` int NOT NULL,
     `data_inicio` date NOT NULL,
     `data_termino` date NOT NULL,
+    `data_pagamento` date NOT NULL, -- sentido de "proxima data de pagamento"
     `status` tinyint NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 );
@@ -66,8 +67,8 @@ CREATE TABLE IF NOT EXISTS pagamento (
     `id` int AUTO_INCREMENT,
     `morador_id` int NOT NULL REFERENCES morador(`id`),
     `valor_pago` float NOT NULL,
-    `data_vencimento` date NOT NULL,
-    `data_pagamento` date,
+    `data_pagamento` date NOT NULL,
+    `is_delayed` tinyint NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 );
 
