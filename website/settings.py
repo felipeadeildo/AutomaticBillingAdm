@@ -8,3 +8,6 @@ PAGINATION_EMPRESAS=25
 """Quantidade de resultados por página para a listagem de empresas"""
 
 TIPOS_IMOVEIS = ["Casa", "Apartamento", "Kitnet", "Flat", "Cobertura", "Loft", "Chalé", "Sobrado", "Mansão", "Sala Comercial", "Terreno"]
+
+PAGINATION_CLIENTS=25
+"""Quantidade de resultados por página para a listagem de clientes"""

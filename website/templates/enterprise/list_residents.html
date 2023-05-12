@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Clientes{% endblock %}
+{% block content %}
+{% if enterprise_id %}
+<h4>Lista de clientes da empresa {{ enterprise_id }}</h4>
+<table class="responsive-table highlight striped">
+<thead>
+    <tr>
+    <th>Nome</th>
+    <th>CPF</th>
+    <th>Telefone</th>
+    <th>Email</th>
+    <th>Imóvel</th>
+    <th>Prazo Tolerância</th>
+    <th>Prazo Medidas legais</th>
+    <th>Data Início</th>
+    <th>Data Fim</th>
+    </tr>
+</thead>
+<tbody>
+    {% for client in clients %}
+    <tr>
+        <td><a class="waves-effect waves-light btn" href="{{ url_for('enterprise.client_infos', client_id=client.id) }}">{{ client.nome }}</a></td>
+    <td>{{ client.cpf }}</td>
+    <td>{{ client.telefone }}</td>
+    <td>{{ client.email }}</td>
+    <td><a class="waves-effect waves-light btn" href="{{ url_for('enterprise.property_infos', imovel_id=client.imovel_id) }}">Ver Imóvel</a></td>
+    <td>{{ client.prazo_tolerancia }}</td>
+    <td>{{ client.prazo_medidas_legais }}</td>
+    <td>{{ client.data_inicio }}</td>
+    <td>{{ client.data_termino }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination -->
+{% if has_prev or has_next %}
+<ul class="pagination">
+{% if has_prev %}
+<li class="waves-effect"><a href="{{ url_for('enterprise.list_residents', page=prev_num, enterprise_id=enterprise_id) }}"><i class="material-icons">chevron_left</i></a></li>
+{% else %}
+<li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+{% endif %}
+{% for p in pages %}
+{% if p %}
+{% if p == page %}
+<li class="active"><a href="#!">{{ p }}</a></li>
+{% else %}
+<li class="waves-effect"><a href="{{ url_for('enterprise.list_residents', page=p, enterprise_id=enterprise_id) }}">{{ p }}</a></li>
+{% endif %}
+{% else %}
+<li class="disabled"><a href="#!">...</a></li>
+{% endif %}
+{% endfor %}
+{% if has_next %}
+<li class="waves-effect"><a href="{{ url_for('enterprise.list_residents', page=next_num, enterprise_id=enterprise_id) }}"><i class="material-icons">chevron_right</i></a></li>
+{% else %}
+<li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+{% endif %}
+</ul>
+{% endif %}
+
+{% else %}
+<h4>Selecione uma empresa para ver os clientes</h4>
+<form method="get">
+<div class="input-field col s12">
+    <select name="enterprise_id">
+    {% for enterprise in enterprises %}
+    <option value="{{ enterprise.id }}">{{ enterprise.name }} ({{ enterprise.email }})</option>
+    {% endfor %}
+    </select>
+    <label>Empresa</label>
+</div>
+
+<!-- Submit button -->
+<button class="btn waves-effect waves-light" type="submit" name="action">Ver clientes
+    <i class="material-icons right">send</i>
+</button>
+</form>
+
+{% endif %}
+
+{% endblock %}

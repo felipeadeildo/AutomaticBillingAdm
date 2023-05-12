@@ -1,8 +1,8 @@
-from flask import Blueprint, request, g, render_template, flash
+from flask import Blueprint, request, g, render_template, flash, abort
 from .db import get_db
 from .auth import login_required
 from datetime import datetime
-from .settings import TIPOS_IMOVEIS, EMPRESA_PERM_LEVEL
+from .settings import TIPOS_IMOVEIS, EMPRESA_PERM_LEVEL, PAGINATION_CLIENTS, ADM_MIN_PERM_LEVEL
 
 bp = Blueprint("enterprise", __name__, url_prefix="/client")
 
@@ -107,4 +107,88 @@ def add_property():
 @bp.route("/inquilinos")
 @login_required()
 def list_residents():
+    """Tem que fazer uma visualização paginada de clientes numa determinada empresa"""
+    enterprise_id = g.user["enterprise_id"] if request.args.get("enterprise_id") is None else request.args["enterprise_id"]
+    # se na requisição não possui parâmetro para enterprise_id, então o usuário está relacionado à uma empresa, se não, pega da querystirng
+    # TODO: Erro de segurança: if g.user["enterprise_id"] is not None and request.args.get("enterprise_id") is not None
+    # pode ser uma empresa tentando acessar o id de OUTRA empresa... (exemplo)
+
+    page = request.args.get('page', 1, type=int)
+    has_prev = None
+    has_next = None
+    conn = get_db()
+
+    clients = []
+    if enterprise_id is not None:
+        total = conn.execute(
+            "SELECT COUNT(*) FROM morador WHERE enterprise_id = %s", 
+            (enterprise_id, )
+        ).fetchone()["COUNT(*)"]
+        clients = conn.execute(
+            "SELECT * FROM morador WHERE enterprise_id = %s LIMIT %s OFFSET %s", 
+            (enterprise_id, PAGINATION_CLIENTS, (page - 1) * PAGINATION_CLIENTS)
+        ).fetchall()
+        has_prev = page > 1
+        has_next = page * PAGINATION_CLIENTS < total
+
+    enterprises = conn.execute("SELECT * FROM empresa").fetchall()
+    context = {
+        "clients": clients,
+        "enterprise_id": enterprise_id,
+        "enterprises": enterprises,
+        "page": page,
+        "has_prev": has_prev,
+        "has_next": has_next,
+        "prev_num": page - 1,
+        "next_num": page + 1,
+        "pages": list(range(0, len(clients)//PAGINATION_CLIENTS))
+    }
+
+    return render_template("enterprise/list_residents.html", **context)
+
+
+@bp.route("/propiedadeaquió/<int:imovel_id>")
+@login_required()
+def property_infos(imovel_id:int):
     return "Em produção"
+
+@bp.route("/clienteaquió/<int:client_id>")
+@login_required()
+def client_infos(client_id:int):
+    conn = get_db()
+    morador = conn.execute("SELECT * FROM morador WHERE id = %s", (client_id,)).fetchone()
+
+    # verifica se o morador_id existe
+    if morador is None:
+        flash(f"Morador de ID {client_id} não foi encontrado no DB", category="danger")
+        abort(404)
+    # verifica se a empresa que está tentando acessar realmente tem perm pra isso
+    if morador["enterprise_id"] != g.user["enterprise_id"] and g.user["permission_level"] < ADM_MIN_PERM_LEVEL:
+        abort(403)
+    
+
+    if request.method == "POST":
+        # TODO: Edeilson
+        pass
+
+
+    enterprise = conn.execute("SELECT * FROM empresa WHERE id = %s", (morador["enterprise_id"], )).fetchone()
+
+    imovel = conn.execute("SELECT * FROM imovel WHERE id = %s", (morador["imovel_id"], )).fetchone()
+
+    pagamentos = conn.execute("SELECT * FROM pagamento WHERE morador_id = %s ORDER BY data_pagamento DESC", (morador["id"], )).fetchall()
+
+    mes_atual = datetime.now().strftime("%m")
+    ultimo_mes_pago = pagamentos[0] if len(pagamentos) > 0 else None
+    data_ultimo_pagamento = pagamentos[0] if len(pagamentos) > 0 else None
+    context = {
+        "enterprise": enterprise,
+        "morador": morador,
+        "imovel": imovel,
+        "ultimo_mes_pago": ultimo_mes_pago,
+        "mes_atual": mes_atual,
+        "data_ultimo_pagamento": data_ultimo_pagamento
+    }
+    # TODO: Adicionar API para o form de update_status
+    # action="{{ url_for('enterprise.update_status', morador_id=morador.id) }}"
+    return render_template("enterprise/client_infos.html", **context)
