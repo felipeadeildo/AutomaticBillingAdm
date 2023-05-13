@@ -112,6 +112,11 @@ def init_db():
         "INSERT INTO feature (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
         ('Lista de Clientes', "Lista todos os clientes dentro do banco de dados de uma determinada empresa.", 'Empresa', 50, "enterprise.list_residents")
     )
+
+    cursor.execute(
+        "INSERT INTO feature (name, description, category, min_perm_level, import_url) VALUES (%s, %s, %s, %s, %s)",
+        ("Relatórios", "Gera relatórios referentes à cobranças feitas, pagamentos recebidos, pagamentos pendentes, etc.", "Empresa", 50, "enterprise.reports")
+    )
     
     db.commit()
     
