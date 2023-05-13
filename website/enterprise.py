@@ -28,13 +28,16 @@ def add_resident():
         data_inicio = datetime.strptime(request.form["data_inicio"], "%b %d, %Y") # May 26, 2023
         data_termino = datetime.strptime(request.form["data_termino"], "%b %d, %Y")
         imovel_id = request.form["imovel_id"]
+        dia_pagamento = request.form["data_pagamento"]
+        # TODO: Adicionar handler para tratar o dia de pagamento e salvar no db
+        data_pagamento = datetime.now()
         # TODO: Verificar se imovel_id realmente existe
         
         enterprise_id = request.form["enterprise_id"]
         
         conn.execute(
-            "INSERT INTO morador (nome, cpf, telefone, email, imovel_id, enterprise_id, prazo_tolerancia, prazo_medidas_legais, data_inicio, data_termino) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            (nome, cpf, telefone, email, imovel_id, enterprise_id, prazo_tolerancia, prazo_medidas_legais, data_inicio, data_termino)
+            "INSERT INTO morador (nome, cpf, telefone, email, imovel_id, enterprise_id, prazo_tolerancia, prazo_medidas_legais, data_inicio, data_termino, data_pagamento) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (nome, cpf, telefone, email, imovel_id, enterprise_id, prazo_tolerancia, prazo_medidas_legais, data_inicio, data_termino, data_pagamento)
         )
         conn.commit()
         flash(f"Morador {nome} ({email}) foi adicionado com sucesso ao banco de dados relacionado ao imóvel de id {imovel_id}", category="success")
