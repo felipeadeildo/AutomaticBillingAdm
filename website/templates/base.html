@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css')}}">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css')}}">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+
 <body>
   <nav class="nav-wrapper">
     <div class="container">
@@ -21,6 +23,25 @@
     </div>
   </nav>
   <div class="container">
+    {% with messages = get_flashed_messages(category_filter=["danger"]) %}
+    {% if messages %}
+    <ul class="collection">
+      {% for message in messages %}
+      <li class="collection-item red-text">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    {% with messages = get_flashed_messages(category_filter=["success"]) %}
+    {% if messages %}
+    <ul class="collection">
+      {% for message in messages %}
+      <li class="collection-item green-text">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
     {% block content %}{% endblock %}
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -32,8 +53,8 @@
       update_hidden_counts();
     });
   </script>
-
   {% block scripts %}
   {% endblock scripts %}
 </body>
+
 </html>

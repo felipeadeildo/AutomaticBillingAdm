@@ -1,32 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}Cadastro de Imóvel{% endblock %}
-
 {% block content %}
-{% with messages = get_flashed_messages(category_filter=["danger"]) %}
-{% if messages %}
-  <ul class="collection">
-    {% for message in messages %}
-      <li class="collection-item red-text">{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
-{% endwith %}
-
-{% with messages = get_flashed_messages(category_filter=["success"]) %}
-{% if messages %}
-  <ul class="collection">
-    {% for message in messages %}
-      <li class="collection-item green-text">{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
-{% endwith %}
 <h2>Cadastro de Imóvel</h2>
 <form method="post" class="m12">
   <div class="row">
     <div class="input-field col s6">
-      <input id="cep" name="cep" type="text" class="validate" required> 
+      <input id="cep" name="cep" type="text" class="validate" required>
       <label for="cep">CEP</label>
     </div>
     <div class="input-field col s6">
@@ -54,14 +34,15 @@
       <label for="complemento" id="complemento_label">Complemento</label>
     </div>
     <div class="input-field col s4">
-      <input id="numero" name="numero" type="text" min="0" class="validate"> <!-- type="text" to get alphanumbers of house -->
+      <input id="numero" name="numero" type="text" min="0" class="validate">
+      <!-- type="text" to get alphanumbers of house -->
       <label for="numero" id="numero_label">Número</label>
     </div>
     <div class="input-field col s4">
       <select name="tipo" required>
         <option value="" disabled selected hidden>Escolha uma opção</option>
         {% for tipo_imovel in tipos_imovel %}
-          <option value="{{ tipo_imovel }}">{{ tipo_imovel }}</option>
+        <option value="{{ tipo_imovel }}">{{ tipo_imovel }}</option>
         {% endfor %}
       </select>
       <label for="tipo">Tipo do Imóvel</label>
@@ -77,32 +58,35 @@
       <label for="valor_venda">Valor de Venda</label>
     </div>
     <div class="input-field col s3">
-      <input type="number" id="taxa_adm_mensal" name="taxa_adm_mensal" step="0.01" min="0" max="100" class="validate" required>
+      <input type="number" id="taxa_adm_mensal" name="taxa_adm_mensal" step="0.01" min="0" max="100" class="validate"
+        required>
       <label for="taxa_adm_mensal">Taxa de Administração Geral</label>
     </div>
     <div class="input-field col s3">
-      <input type="number" id="taxa_locacao" name="taxa_locacao" step="0.01" min="0" max="100" class="validate" required>
+      <input type="number" id="taxa_locacao" name="taxa_locacao" step="0.01" min="0" max="100" class="validate"
+        required>
       <label for="taxa_locacao">Taxa de Locacao</label>
     </div>
   </div>
   {% if enterprise_id %}
-    <input name="enterprise_id" value="{{ enterprise_id }}" type="hidden">
+  <input name="enterprise_id" value="{{ enterprise_id }}" type="hidden">
   {% else %}
   <div class="row">
-  <div class="input-field col s12">
-    <select name="enterprise_id" id="enterprise_id" required>
-      <option disabled selected hidden>Selecione a Empresa a quem se destina este Imóvel</option>
-      {% for enterprise in enterprises %}
+    <div class="input-field col s12">
+      <select name="enterprise_id" id="enterprise_id" required>
+        <option disabled selected hidden>Selecione a Empresa a quem se destina este Imóvel</option>
+        {% for enterprise in enterprises %}
         <option value="{{ enterprise.id }}">{{ enterprise.name }} ({{ enterprise.email }})</option>
-      {% endfor %}
-    </select>
-    <label for="enterprise_id">Empresa</label>
-  </div>
+        {% endfor %}
+      </select>
+      <label for="enterprise_id">Empresa</label>
+    </div>
   </div>
   {% endif %}
 
   <div class="btn-fixed-action">
-    <a href="{{ url_for(previous_page) }}" class="btn waves-effect waves-light right"><i class="material-icons left">arrow_back</i>Voltar para a Home</a>
+    <a href="{{ url_for(previous_page) }}" class="btn waves-effect waves-light right"><i
+        class="material-icons left">arrow_back</i>Voltar para a Home</a>
     <button class="btn btn-block waves-effect waves-light left" type="submit" name="action">Cadastrar
       <i class="material-icons right">send</i>
     </button>

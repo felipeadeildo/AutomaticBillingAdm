@@ -1,57 +1,54 @@
 {% extends "base.html" %}
 {% block title %}Informações do Morador{% endblock %}
 {% block content %}
-<div class="container">
-    
-    <div class="row">
-        <div class="col s12 m6">
-            <h4>Informações do Morador</h4>
-            <p><strong>Nome:</strong> {{ morador.nome }}</p>
-            <p><strong>CPF:</strong> {{ morador.cpf }}</p>
-            <p><strong>Telefone:</strong> {{ morador.telefone }}</p>
-            <p><strong>Email:</strong> {{ morador.email }}</p>
-            <p><strong>Data de início:</strong> {{ morador.data_inicio }}</p>
-            <p><strong>Data de término:</strong> {{ morador.data_termino }}</p>
-            <p><strong>Data de pagamento:</strong> {{ morador.data_pagamento }}</p>
-            <p><strong>Data do último pagamento:</strong> {{ data_ultimo_pagamento }}</p>
-            <p><strong>Prazo de tolerância:</strong> {{ morador.prazo_tolerancia }} dias</p>
-            <p><strong>Prazo de medidas legais:</strong> {{ morador.prazo_medidas_legais }} dias</p>
-            <p><strong>Status:</strong> {% if morador.status == 1 %}<span class="red pulse">Em atraso</span>{% else %}<span
-                    class="green pulse">pagamento em Dia</span>{% endif %}</p>
-        </div>
-        <div class="col s12 m6">
-            <h4>Informações do Imóvel</h4>
-            <p><strong>Valor do aluguel:</strong> R$ {{ imovel.valor_aluguel }}</p>
-            <p><strong>Valor de venda:</strong> R$ {{ imovel.valor_venda }}</p>
-            <p><strong>Taxa de administração mensal:</strong> R$ {{ imovel.taxa_adm_mensal }}</p>
-            <p><strong>Taxa de locação:</strong> R$ {{ imovel.taxa_locacao }}</p>
-            <p><strong>Tipo:</strong> {{ imovel.tipo }}</p>
-            <p><strong>Endereço:</strong> {{ imovel.endereco }}, {{ imovel.numero }}{% if imovel.complemento %}, {{
-                imovel.complemento }}{% endif %}</p>
-            <p><strong>Bairro:</strong> {{ imovel.bairro }}</p>
-            <p><strong>Cidade:</strong> {{ imovel.cidade }}</p>
-            <p><strong>Estado:</strong> {{ imovel.estado }}</p>
-            <a href="{{ url_for('enterprise.property_infos', imovel_id=imovel.id) }}"
-                class="btn waves-effect waves-light">Ver mais detalhes</a>
-        </div>
+<div class="row">
+    <div class="col s12 m6">
+        <h4>Informações do Morador</h4>
+        <p><strong>Nome:</strong> {{ morador.nome }}</p>
+        <p><strong>CPF:</strong> {{ morador.cpf }}</p>
+        <p><strong>Telefone:</strong> {{ morador.telefone }}</p>
+        <p><strong>Email:</strong> {{ morador.email }}</p>
+        <p><strong>Data de início:</strong> {{ morador.data_inicio }}</p>
+        <p><strong>Data de término:</strong> {{ morador.data_termino }}</p>
+        <p><strong>Data de pagamento:</strong> {{ morador.data_pagamento }}</p>
+        <p><strong>Data do último pagamento:</strong> {{ data_ultimo_pagamento }}</p>
+        <p><strong>Prazo de tolerância:</strong> {{ morador.prazo_tolerancia }} dias</p>
+        <p><strong>Prazo de medidas legais:</strong> {{ morador.prazo_medidas_legais }} dias</p>
+        <p><strong>Status:</strong> {% if morador.status == 1 %}<span class="red pulse">Em atraso</span>{% else %}<span
+                class="green pulse">pagamento em Dia</span>{% endif %}</p>
     </div>
-    {% if ultimo_mes_pago != mes_atual %}
-    <div class="row">
-        <form method="POST">
-            <div class="input-field col s12 m6">
-                <select name="status" id="status">
-                    <option value="" disabled selected>Escolha o status do morador</option>
-                    <option value="0">Tudo ok</option>
-                    <option value="1">Pendências</option>
-                </select>
-                <label for="status">Status do morador</label>
-            </div>
-            <div class="input-field col s12 m6">
-                <button type="submit" class="btn waves-effect waves-light">Atualizar status</button>
-            </div>
-        </form>
+    <div class="col s12 m6">
+        <h4>Informações do Imóvel</h4>
+        <p><strong>Valor do aluguel:</strong> R$ {{ imovel.valor_aluguel }}</p>
+        <p><strong>Valor de venda:</strong> R$ {{ imovel.valor_venda }}</p>
+        <p><strong>Taxa de administração mensal:</strong> R$ {{ imovel.taxa_adm_mensal }}</p>
+        <p><strong>Taxa de locação:</strong> R$ {{ imovel.taxa_locacao }}</p>
+        <p><strong>Tipo:</strong> {{ imovel.tipo }}</p>
+        <p><strong>Endereço:</strong> {{ imovel.endereco }}, {{ imovel.numero }}{% if imovel.complemento %}, {{
+            imovel.complemento }}{% endif %}</p>
+        <p><strong>Bairro:</strong> {{ imovel.bairro }}</p>
+        <p><strong>Cidade:</strong> {{ imovel.cidade }}</p>
+        <p><strong>Estado:</strong> {{ imovel.estado }}</p>
+        <a href="{{ url_for('enterprise.property_infos', imovel_id=imovel.id) }}"
+            class="btn waves-effect waves-light">Ver mais detalhes</a>
     </div>
-    {% endif %}
 </div>
+{% if ultimo_mes_pago != mes_atual %}
+<div class="row">
+    <form method="post">
+        <div class="input-field col s12 m6">
+            <select name="status" id="status">
+                <option value="" disabled selected>Status do morador no mês {{ mes_atual }}</option>
+                <option value="0">Marcar status como "Pago"</option>
+                <option value="1">Marcar status como "Pendente"</option>
+            </select>
+            <label for="status">Status do morador</label>
+        </div>
+        <div class="input-field col s12 m6">
+            <button type="submit" class="btn waves-effect waves-light">Atualizar status</button>
+        </div>
+    </form>
+</div>
+{% endif %}
 
 {% endblock %}
