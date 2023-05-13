@@ -152,7 +152,8 @@ def list_residents():
 def property_infos(imovel_id:int):
     return "Em produção"
 
-@bp.route("/clienteaquió/<int:client_id>")
+
+@bp.route("/clienteaquió/<int:client_id>", methods=("POST", "GET"))
 @login_required()
 def client_infos(client_id:int):
     conn = get_db()
@@ -168,9 +169,12 @@ def client_infos(client_id:int):
     
 
     if request.method == "POST":
-        # TODO: Edeilson
-        pass
-
+        # se chegou até aqui é pq está tudo okay :D
+        status = request.form["status"]
+        conn.execute("UPDATE morador SET status = %s WHERE id = %s", (status, client_id))
+        conn.commit()
+        flash(f"Status do morador {morador['nome']} foi atualizado com sucesso!", category="success")
+        morador["status"] = int(status)
 
     enterprise = conn.execute("SELECT * FROM empresa WHERE id = %s", (morador["enterprise_id"], )).fetchone()
 
@@ -189,6 +193,10 @@ def client_infos(client_id:int):
         "mes_atual": mes_atual,
         "data_ultimo_pagamento": data_ultimo_pagamento
     }
-    # TODO: Adicionar API para o form de update_status
-    # action="{{ url_for('enterprise.update_status', morador_id=morador.id) }}"
     return render_template("enterprise/client_infos.html", **context)
+
+
+@bp.route("/relatórios")
+@login_required()
+def reports():
+    return "Em produção"
